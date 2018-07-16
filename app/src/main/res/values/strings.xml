@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">The New York Time</string>
+    <string name="action_settings">Parametres</string>
+    <string name="entrer">Entrer ICI</string>
+    <string name="text_view">tvTitle</string>
+    <string name="todo">TODO</string>
+    <string name="title_activity_article">Article</string>
+    <string name="action_refresh">Action</string>
+</resources>
