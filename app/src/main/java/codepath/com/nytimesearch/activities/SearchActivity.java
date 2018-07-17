@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ActionProvider;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import com.loopj.android.http.*;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -101,8 +104,19 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater menuInflater = getMenuInflater();
         getMenuInflater().inflate(R.menu.menu_search, menu);
         MenuItem item = menu.findItem(R.id.action_search);
+        //MenuItem shareItem = menu.findItem(R.id.item_share);
+        /*ShareActionProvider actionProvider = new ShareActionProvider(this);
+        actionProvider  =(ShareActionProvider) shareItem.getActionProvider();
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        final String url = getIntent().getStringExtra("url");
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+        startActivity(Intent.createChooser(shareIntent, "Share link using"));
+         actionProvider.setShareIntent(shareIntent);*/
+
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -111,7 +125,7 @@ public class SearchActivity extends AppCompatActivity {
                 AsyncHttpClient client = new AsyncHttpClient();
                 //String  queri = etQuery.getText().toString();
 
-                Toast.makeText(SearchActivity.this, "Recherche en  cours ", Toast.LENGTH_LONG).show();
+                Toast.makeText(SearchActivity.this, "Recherche en  cours... ", Toast.LENGTH_LONG).show();
                 String url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
                 RequestParams params = new RequestParams();
                 params.put("api-key", "16b07ba4166644d59b5ebc833866c166");
@@ -134,8 +148,6 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
 
 
-
-                
             }
 
 
@@ -147,7 +159,10 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+
+
         return true;
+
     }
 
     @Override
@@ -157,21 +172,26 @@ public class SearchActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+          if (item.getItemId() == R.id.item_share){
+
+           Intent shareIntent = new Intent(Intent.ACTION_SEND);
+              final String url = getIntent().getStringExtra("url");
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+            startActivity(Intent.createChooser(shareIntent, "Choisissez"));
+           // Toast.makeText(getApplicationContext(), "All", Toast.LENGTH_SHORT).show();
+            return  true;
+        }
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (item.getItemId() == R.id.action_settings) {
+           // Toast.makeText(getApplicationContext(), "Click", Toast.LENGTH_LONG).show();
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
-    public void sharelink(MenuItem item) {
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "http://codepath.com");
-        startActivity(Intent.createChooser(shareIntent, "Share link using"));
-        Toast.makeText(SearchActivity.this, "Hello", Toast.LENGTH_SHORT).show();
-    }
 }
